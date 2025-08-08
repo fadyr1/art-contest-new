@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { supabase } from "../lib/supabase"
 import { MessageCircle, Send } from "lucide-react"
-import { useCountdown } from "../contexts/Countdowncontext"
+import { useCountdown } from "../contexts/CountdownContext"
 
 interface CommentFormProps {
   artId: string;

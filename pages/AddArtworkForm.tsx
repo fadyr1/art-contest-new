@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 import { Upload, ImageIcon, Type, CheckCircle, AlertCircle } from "lucide-react"
 import { Session } from "@supabase/supabase-js"
-import { CountdownProvider, useCountdown } from "../contexts/Countdowncontext"
+import { CountdownProvider, useCountdown } from "../contexts/CountdownContext"
 
 
 export default function AddArtworkForm() {

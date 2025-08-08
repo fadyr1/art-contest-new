@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useCountdown } from "../contexts/Countdowncontext"
+import { useCountdown } from "../contexts/CountdownContext"
 import { supabase } from "../lib/supabase"
 
 export default function CountdownTimer({ onEnd }: { onEnd: () => void }) {
