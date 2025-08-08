@@ -9,7 +9,7 @@ import CommentsSection from "../components/CommentsSection"
 import { Badge } from "@/components/ui/badge"
 import { Palette, User, Trophy, Users, Heart } from 'lucide-react'
 import CountdownTimer from "../components/CountdownTimer"
-import { CountdownProvider } from "../contexts/Countdowncontext"
+import { CountdownProvider } from "../contexts/CountdownContext"
 import { useRouter } from "next/navigation"
 
 

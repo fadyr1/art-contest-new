@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { supabase } from "../lib/supabase"
 import { Heart, Users } from "lucide-react"
-import { CountdownProvider, useCountdown } from "../contexts/Countdowncontext"
+import { CountdownProvider, useCountdown } from "../contexts/CountdownContext"
 
 type VoteButtonProps = {
   artId: string
