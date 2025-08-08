@@ -180,18 +180,18 @@ export default function HomePage() {
                         isWinner ? "border-amber-700 shadow-lg ring-4 ring-amber-700" : "border-blue-100 hover:shadow-2xl hover:-translate-y-2"
                       }`}
                     >
-                      <a href={art.image_url} target="_blank" rel="noopener noreferrer">
                       {isWinner && (
                         <div className="absolute top-0 left-0 bg-amber-700 text-white font-bold px-3 py-1 rounded-br-xl z-10">
                           🏆 الفائز
                         </div>
                       )}
                       <div className="relative overflow-hidden">
-                        <img
+                                             <a href={art.image_url} target="_blank" rel="noopener noreferrer">
+ <img
                           src={art.image_url || "/placeholder.svg"}
                           alt={art.title}
                           className="w-full h-72 object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
+                        /></a>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="absolute top-4 left-4">
                           <Badge className="bg-white/95 text-black border-black shadow-md font-medium">
@@ -235,7 +235,7 @@ export default function HomePage() {
                           </div>
                         )}
                       </div>
-                      </a>
+                      
                     </article>
                   )
                 })}
