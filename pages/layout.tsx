@@ -13,10 +13,7 @@ const nunito = Cairo({
   variable: "--font-nunito",
 })
 
-export const metadata: Metadata = {
-  title: "Art Contest 2024",
-  description: "Celebrating creativity and artistic expression",
-}
+ 
 
 export default function RootLayout({
   children,
