@@ -88,6 +88,7 @@ setImageUrl(uploadedImageUrl);
     setTitle("");
     setImageUrl("");
     setFile(null);
+    setContent("");
 
     setTimeout(() => {
       setMessage("");

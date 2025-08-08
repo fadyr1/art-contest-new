@@ -31,7 +31,7 @@ const userId = signUpData.user?.id
     if (error) {
       setError(SignUpError?.message || "An unknown error occurred during sign up.")
     } else {
-      setSuccess("Account created successfully! Please check your email to verify your account.")
+      setSuccess("تم انشاء الحساب بنجاح!")
       setTimeout(() => {
         router.push("/login")
       }, 3000)

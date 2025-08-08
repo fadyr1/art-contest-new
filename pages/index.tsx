@@ -94,12 +94,21 @@ export default function HomePage() {
                 <Palette className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-nunito font-bold bg-gradient-to-r from-amber-600 to-amber-600 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-nunito font-bold bg-gradient-to-r from-amber-600 to-amber-600 bg-clip-text text-transparent">
                   مهرجان الكرازة 2025
                 </h1>
               </div>
             </div>
-            <LogoutButton />
+                 {userId ? (
+                         <LogoutButton />
+                        ) : (
+
+                            <button onClick={() => router.push("/login")} className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium shadow-lg">
+                              تسجيل الدخول
+                            </button>
+                           
+                        )}
+            
           </div>
         </div>
       </header>
@@ -168,7 +177,18 @@ export default function HomePage() {
             </section>
 
             <section>
-              <h2 className="text-3xl font-bold text-slate-800 mb-8 text-center">الأعمال الفنية المميزة</h2>
+              <div  className="text-center">
+              <h2 className="text-3xl font-bold text-slate-800 mb-4 text-center">الأعمال الفنية المميزة</h2>
+               {userId ? (
+                      <button onClick={() => router.push("/AddArtworkForm")} className="bg-gradient-to-r mb-6 from-amber-600 to-amber-700 text-white px-4 py-2 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium shadow-lg">
+                               اضف عملك الفني  
+                            </button>    
+                        ) : (
+
+                            <div></div>
+                        )}
+              
+                            </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {artworks.map((art) => {
                   const isWinner = countdownOver && winningArtId === art.id
@@ -185,13 +205,13 @@ export default function HomePage() {
                           🏆 الفائز
                         </div>
                       )}
-                      <div className="relative overflow-hidden">
-                                             <a href={art.image_url} target="_blank" rel="noopener noreferrer">
+                     <a href={art.image_url} target="_blank" rel="noopener noreferrer"> <div className="relative overflow-hidden">
+                      
  <img
                           src={art.image_url || "/placeholder.svg"}
                           alt={art.title}
                           className="w-full h-72 object-cover transition-transform duration-700 group-hover:scale-110"
-                        /></a>
+                        />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="absolute top-4 left-4">
                           <Badge className="bg-white/95 text-black border-black shadow-md font-medium">
@@ -199,7 +219,7 @@ export default function HomePage() {
                           </Badge>
                         </div>
                       </div>
-
+</a>
                       <div className="p-8">
                         <header className="mb-6">
                           <h3 className="text-2xl font-bold text-slate-800 mb-3 line-clamp-2 text-right">
