@@ -37,43 +37,63 @@ export default function VoteButton({ artId, userId }: VoteButtonProps) {
     fetchVoteInfo()
   }, [artId, userId])
 
-  const handleVote = async () => {
-    if (hasVoted || loading) return
+const handleVote = async () => {
+  if (loading || hasEnded) return; // prevent spam clicks
+  setLoading(true);
 
-    setLoading(true)
+  if (hasVoted) {
+    // Remove vote
+    const { error: deleteError } = await supabase
+      .from("votes")
+      .delete()
+      .eq("art_id", artId)
+      .eq("user_id", userId);
 
-    const { error } = await supabase.from("votes").insert([{ art_id: artId, user_id: userId }])
-
-if (error) {
-  console.error("Vote insert failed:", error)
-
-  // Detect unique constraint violation
-  if (error.code === '23505') {
-    alert("لقد قمت بالتصويت بالفعل لهذا العمل الفني.")
+    if (deleteError) {
+      console.error("Vote delete failed:", deleteError);
+      alert(`حدث خطأ أثناء إلغاء التصويت:\n${deleteError.message}`);
+    } else {
+      setHasVoted(false);
+      // refresh count
+      const { count } = await supabase
+        .from("votes")
+        .select("*", { count: "exact", head: true })
+        .eq("art_id", artId);
+      setVoteCount(count || 0);
+    }
   } else {
-    alert(`حدث خطأ أثناء التصويت:\n${error.message}`)
+    // Add vote
+    const { error: insertError } = await supabase
+      .from("votes")
+      .insert([{ art_id: artId, user_id: userId }]);
+
+    if (insertError) {
+      console.error("Vote insert failed:", insertError);
+      if (insertError.code === "23505") {
+        alert("لقد قمت بالتصويت بالفعل لهذا العمل الفني.");
+      } else {
+        alert(`حدث خطأ أثناء التصويت:\n${insertError.message}`);
+      }
+    } else {
+      setHasVoted(true);
+      // refresh count
+      const { count } = await supabase
+        .from("votes")
+        .select("*", { count: "exact", head: true })
+        .eq("art_id", artId);
+      setVoteCount(count || 0);
+    }
   }
 
-  setLoading(false)
-  return
-}
-
-
-    setHasVoted(true)
-
-    // Refresh vote count
-    const { count } = await supabase.from("votes").select("*", { count: "exact", head: true }).eq("art_id", artId)
-
-    setVoteCount(count || 0)
-    setLoading(false)
-  }
+  setLoading(false);
+};
 const { hasEnded } = useCountdown()
   return (
     <CountdownProvider>
     <div className="space-y-2">
       <button
         onClick={handleVote}
-        disabled={hasVoted || loading || hasEnded}
+        disabled={loading || hasEnded}
         className={`w-full px-4 py-3 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
           hasVoted
             ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md"
