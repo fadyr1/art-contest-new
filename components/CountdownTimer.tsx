@@ -8,7 +8,7 @@ export default function CountdownTimer({ onEnd }: { onEnd: () => void }) {
   const [timeLeft, setTimeLeft] = useState(0)
   const [endTime, setEndTime] = useState<string | null>(null)
   const { setHasEnded } = useCountdown()
-
+ 
   // Fetch the end time from the database
   useEffect(() => {
     const fetchEndTime = async () => {

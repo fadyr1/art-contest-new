@@ -11,6 +11,7 @@ import { Palette, User, Trophy, Users, Heart } from 'lucide-react'
 import CountdownTimer from "../components/CountdownTimer"
 import { CountdownProvider } from "../contexts/CountdownContext"
 import { useRouter } from "next/navigation"
+import RatingStars from "../components/RatingStars"
 
 
 interface Artwork {
@@ -23,6 +24,11 @@ interface Artwork {
     username: string;
   };
 }
+type Vote = {
+  art_id: string
+  rating: number
+}
+
 
 export default function HomePage() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
@@ -32,18 +38,20 @@ export default function HomePage() {
   const [winningArtId, setWinningArtId] = useState<string | null>(null);
   const [countdownOver, setCountdownOver] = useState(false);
   const router = useRouter()
+ 
 
 
   const calculateWinner = async () => {
-    const { data: votes, error } = await supabase.from("votes").select("art_id")
+    const { data: votes, error } = await supabase.from("votes").select("art_id, rating")
     if (error || !votes) {
       console.error("Error fetching votes:", error)
       return
     }
     const voteMap: Record<string, number> = {}
-    votes.forEach((vote) => {
-      voteMap[vote.art_id] = (voteMap[vote.art_id] || 0) + 1
-    })
+  votes.forEach((vote: Vote) => {
+    voteMap[vote.art_id] = (voteMap[vote.art_id] || 0) + (vote.rating || 0)
+  })
+
     const sorted = Object.entries(voteMap).sort((a, b) => b[1] - a[1])
     if (sorted.length > 0) {
       const [winnerArtId] = sorted[0]
@@ -239,7 +247,8 @@ export default function HomePage() {
                         </div>
                         {userId ? (
                           <div className="space-y-6">
-                            <VoteButton artId={art.id} userId={userId} />
+                            {/* <VoteButton artId={art.id} userId={userId} /> */}
+                            <RatingStars artId={art.id} userId={userId} />
                             <div className="space-y-4">
                               <CommentsSection artId={art.id} />
                               <CommentForm artId={art.id} userId={userId} onCommentAdded={() => {}} />
