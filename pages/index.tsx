@@ -12,7 +12,7 @@ import CountdownTimer from "../components/CountdownTimer"
 import { CountdownProvider } from "../contexts/CountdownContext"
 import { useRouter } from "next/navigation"
 import RatingStars from "../components/RatingStars"
-import Searchbar from "../components/Searchbar"
+ 
 
 
 interface Artwork {
@@ -123,6 +123,13 @@ export default function HomePage() {
                   مهرجان الكرازة 2025
                 </h1>
               </div>
+              <input
+        type="text"
+        placeholder="ابحث عن عمل فني..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-80 p-2 border rounded-xl mb-6 mt-4 border-amber-500 mr-40"
+      />
             </div>
                  {userId ? (
                          <LogoutButton />
@@ -135,13 +142,7 @@ export default function HomePage() {
                         )}
             
           </div>
-                <input
-        type="text"
-        placeholder="ابحث عن عمل فني..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full p-2 border rounded-xl mb-6"
-      />
+                
         </div>
       </header>
 
