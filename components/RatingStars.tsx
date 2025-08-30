@@ -57,7 +57,7 @@ export default function RatingStars({ artId, userId }: RatingStarsProps) {
 
     if (error) {
       console.error("Rating failed:", error);
-      alert(`خطأ في حفظ التقييم:\n${error.message}`);
+      alert(`خطأ في حفظ التقييم`);
       setLoading(false);
       return;
     }
@@ -129,7 +129,7 @@ const { hasEnded } = useCountdown()
       {/* Remove Rating */}
       {rating > 0 && (
         <button
-          onClick= {()=> !hasEnded && handleRemoveRating}
+          onClick= {()=> !hasEnded && handleRemoveRating()}
           className="text-sm text-red-600 hover:underline mt-2"
         >
           إزالة تقييمي

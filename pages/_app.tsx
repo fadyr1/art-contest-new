@@ -1,6 +1,17 @@
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
+import type { AppProps } from "next/app"
+import { Tajawal } from "next/font/google"
+import "../styles/globals.css"
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+// load Cairo from Google Fonts
+const tajawal = Tajawal({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin", "arabic"],
+})
+
+export default function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <div className={tajawal.className}>
+      <Component {...pageProps} />
+    </div>
+  )
 }

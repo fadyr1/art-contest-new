@@ -12,6 +12,7 @@ import CountdownTimer from "../components/CountdownTimer"
 import { CountdownProvider } from "../contexts/CountdownContext"
 import { useRouter } from "next/navigation"
 import RatingStars from "../components/RatingStars"
+import Searchbar from "../components/Searchbar"
 
 
 interface Artwork {
@@ -33,12 +34,19 @@ type Vote = {
 export default function HomePage() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
   const [voteCounts, setVoteCounts] = useState<{ [key: string]: number }>({});
   const [winner, setWinner] = useState<Artwork | null>(null);
   const [winningArtId, setWinningArtId] = useState<string | null>(null);
   const [countdownOver, setCountdownOver] = useState(false);
   const router = useRouter()
  
+     const filteredArtworks = artworks.filter((a) =>
+    a.title.toLowerCase().includes(search.toLowerCase()) ||
+    a.content.toLowerCase().includes(search.toLowerCase()) ||
+    a.profiles?.username.toLowerCase().includes(search.toLowerCase())
+
+  );
 
 
   const calculateWinner = async () => {
@@ -58,7 +66,7 @@ export default function HomePage() {
       setWinningArtId(winnerArtId)
     }
   }
-
+ 
   useEffect(() => {
     const fetchUser = async () => {
       const {
@@ -90,19 +98,28 @@ export default function HomePage() {
     fetchUser()
     fetchArtworks()
     fetchVotes()
+
   }, [])
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50" dir="rtl">
-      <header className="bg-white/95 backdrop-blur-md border-b border-blue-100 sticky top-0 z-50 shadow-sm">
+   return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 animate-gradient relative overflow-hidden" dir="rtl">
+      {/* Floating background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-amber-200/20 rounded-full animate-float"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-blue-200/20 rounded-full animate-float animate-delay-200"></div>
+        <div className="absolute bottom-40 left-1/4 w-40 h-40 bg-indigo-200/20 rounded-full animate-float animate-delay-400"></div>
+        <div className="absolute bottom-20 right-1/3 w-28 h-28 bg-amber-300/20 rounded-full animate-float animate-delay-600"></div>
+      </div>
+
+      <header className="bg-white/95 backdrop-blur-md border-b border-blue-100 sticky top-0 z-50 shadow-sm animate-slide-in-up">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-br from-amber-600 to-orange-700 p-3 rounded-2xl shadow-lg">
+              <div className="bg-gradient-to-br from-amber-600 to-orange-700 p-3 rounded-2xl shadow-lg animate-pulse-glow hover-lift">
                 <Palette className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-nunito font-bold bg-gradient-to-r from-amber-600 to-amber-600 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-nunito font-bold bg-gradient-to-r from-amber-600 to-amber-600 bg-clip-text text-transparent animate-shimmer">
                   مهرجان الكرازة 2025
                 </h1>
               </div>
@@ -111,22 +128,29 @@ export default function HomePage() {
                          <LogoutButton />
                         ) : (
 
-                            <button onClick={() => router.push("/login")} className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium shadow-lg">
+                            <button onClick={() => router.push("/login")} className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-bounce font-medium shadow-lg hover-glow">
                               تسجيل الدخول
                             </button>
                            
                         )}
             
           </div>
+                <input
+        type="text"
+        placeholder="ابحث عن عمل فني..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full p-2 border rounded-xl mb-6"
+      />
         </div>
       </header>
 
       <section className="relative py-16 px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="bg-white/80 backdrop-blur-md rounded-3xl p-12 shadow-xl border border-amber-100">
-            <Trophy className="w-16 h-16 text-amber-600 mx-auto mb-6" />
-            <h2 className="text-3xl font-bold text-slate-800 mb-4">اثْبُتْ عَلَى مَا تَعَلَّمْتَ</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          <div className="bg-white/80 backdrop-blur-md rounded-3xl p-12 shadow-xl border border-amber-100 animate-scale-in hover-lift">
+            <Trophy className="w-16 h-16 text-amber-600 mx-auto mb-6 animate-float" />
+            <h2 className="text-3xl font-bold text-slate-800 mb-4 animate-slide-in-up animate-delay-200">اثْبُتْ عَلَى مَا تَعَلَّمْتَ</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed animate-slide-in-up animate-delay-300">
             سجل اعمالك الفنية في مسابقة مهرجان الكرازة 2025 وشارك موهبتك! </p>
           </div>
         </div>
@@ -135,10 +159,10 @@ export default function HomePage() {
       <main className="max-w-7xl mx-auto px-6 pb-16">
         {artworks.length === 0 ? (
           <div className="text-center py-20">
-            <div className="bg-white/80 backdrop-blur-md rounded-3xl p-16 max-w-lg mx-auto border border-blue-100 shadow-lg">
-              <Palette className="w-20 h-20 text-amber-600 mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-slate-800 mb-4">لا توجد أعمال فنية بعد</h3>
-              <p className="text-slate-600 text-lg">كن أول من يشارك تحفته الفنية مع العالم!</p>
+            <div className="bg-white/80 backdrop-blur-md rounded-3xl p-16 max-w-lg mx-auto border border-blue-100 shadow-lg animate-scale-in hover-lift">
+              <Palette className="w-20 h-20 text-amber-600 mx-auto mb-6 animate-float" />
+              <h3 className="text-2xl font-bold text-slate-800 mb-4 animate-slide-in-up animate-delay-200">لا توجد أعمال فنية بعد</h3>
+              <p className="text-slate-600 text-lg animate-slide-in-up animate-delay-300">كن أول من يشارك تحفته الفنية مع العالم!</p>
             </div>
           </div>
         ) : (
@@ -146,7 +170,7 @@ export default function HomePage() {
           
           <CountdownProvider>
             <section className="mb-12">
-              <div className="bg-white/80 backdrop-blur-md rounded-2xl p-8 border border-blue-100 shadow-lg">
+              <div className="bg-white/80 backdrop-blur-md rounded-2xl p-8 border border-blue-100 shadow-lg animate-scale-in hover-lift">
                 <div><CountdownTimer
                    
                   onEnd={() => {
@@ -155,7 +179,7 @@ export default function HomePage() {
                   }}
                 />
                   {countdownOver && winningArtId && (
-                <div className="text-center mb-6 mt-2 text-xl font-bold text-green-700">
+                <div className="text-center mb-6 mt-2 text-xl font-bold text-green-700 animate-pulse-glow">
                   الفائز: {
                     artworks.find((art) => art.id === winningArtId)?.profiles?.username || "غير معروف"
                   }
@@ -164,18 +188,18 @@ export default function HomePage() {
                </div>
               
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                  <div className="space-y-2">
-                    <div className="text-4xl font-bold text-amber-600">{artworks.length}</div>
+                  <div className="space-y-2 animate-slide-in-up animate-delay-100">
+                    <div className="text-4xl font-bold text-amber-600 transition-smooth hover:scale-110">{artworks.length}</div>
                     <div className="text-slate-600 font-medium tracking-wide">عمل فني</div>
                   </div>
-                  <div className="space-y-2">
-                    <div className="text-4xl font-bold text-amber-600">
+                  <div className="space-y-2 animate-slide-in-up animate-delay-200">
+                    <div className="text-4xl font-bold text-amber-600 transition-smooth hover:scale-110">
                       {Object.values(voteCounts).reduce((sum, count) => sum + count, 0)}
                     </div>
                     <div className="text-slate-600 font-medium tracking-wide">إجمالي الأصوات</div>
                   </div>
-                  <div className="space-y-2">
-                    <div className="text-4xl font-bold text-amber-600">
+                  <div className="space-y-2 animate-slide-in-up animate-delay-300">
+                    <div className="text-4xl font-bold text-amber-600 transition-smooth hover:scale-110">
                       {new Set(artworks.map((art) => art.id)).size}
                     </div>
                     <div className="text-slate-600 font-medium tracking-wide">فنان</div>
@@ -186,9 +210,9 @@ export default function HomePage() {
 
             <section>
               <div  className="text-center">
-              <h2 className="text-3xl font-bold text-slate-800 mb-4 text-center">الأعمال الفنية المميزة</h2>
+              <h2 className="text-3xl font-bold text-slate-800 mb-4 text-center animate-slide-in-up">الأعمال الفنية المميزة</h2>
                {userId ? (
-                      <button onClick={() => router.push("/AddArtworkForm")} className="bg-gradient-to-r mb-6 from-amber-600 to-amber-700 text-white px-4 py-2 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium shadow-lg">
+                      <button onClick={() => router.push("/AddArtworkForm")} className="bg-gradient-to-r mb-6 from-amber-600 to-amber-700 text-white px-4 py-2 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-bounce font-medium shadow-lg hover-glow animate-scale-in animate-delay-200">
                                اضف عملك الفني  
                             </button>    
                         ) : (
@@ -198,18 +222,19 @@ export default function HomePage() {
               
                             </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {artworks.map((art) => {
+                {filteredArtworks.map((art, index) => {
                   const isWinner = countdownOver && winningArtId === art.id
+                  const animationDelay = `animate-delay-${Math.min((index % 6 + 1) * 100, 600)}`
 
                   return (
                     <article
                       key={art.id}
-                      className={`relative bg-white/90 backdrop-blur-md border rounded-3xl overflow-hidden shadow-lg transition-all duration-500 group ${
-                        isWinner ? "border-amber-700 shadow-lg ring-4 ring-amber-700" : "border-blue-100 hover:shadow-2xl hover:-translate-y-2"
+                      className={`relative bg-white/90 backdrop-blur-md border rounded-3xl overflow-hidden shadow-lg transition-smooth group hover-lift animate-scale-in ${animationDelay} ${
+                        isWinner ? "border-amber-700 shadow-lg ring-4 ring-amber-700 animate-pulse-glow" : "border-blue-100 hover:shadow-2xl hover-glow"
                       }`}
                     >
                       {isWinner && (
-                        <div className="absolute top-0 left-0 bg-amber-700 text-white font-bold px-3 py-1 rounded-br-xl z-10">
+                        <div className="absolute top-0 left-0 bg-amber-700 text-white font-bold px-3 py-1 rounded-br-xl z-10 animate-float">
                           🏆 الفائز
                         </div>
                       )}
@@ -218,11 +243,11 @@ export default function HomePage() {
  <img
                           src={art.image_url || "/placeholder.svg"}
                           alt={art.title}
-                          className="w-full h-72 object-cover transition-transform duration-700 group-hover:scale-110"
+                          className="w-full h-72 object-cover transition-smooth group-hover:scale-110 group-hover:rotate-1"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        <div className="absolute top-4 left-4">
-                          <Badge className="bg-white/95 text-black border-black shadow-md font-medium">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-smooth" />
+                        <div className="absolute top-4 left-4 transform transition-bounce group-hover:scale-110">
+                          <Badge className="bg-white/95 text-black border-black shadow-md font-medium animate-shimmer">
                             #{art.id}
                           </Badge>
                         </div>
@@ -230,24 +255,23 @@ export default function HomePage() {
 </a>
                       <div className="p-8">
                         <header className="mb-6">
-                          <h3 className="text-2xl font-bold text-slate-800 mb-3 line-clamp-2 text-right">
+                          <h3 className="text-2xl font-bold text-slate-800 mb-3 line-clamp-2 text-right transition-smooth group-hover:text-amber-600">
                             {art.title}
                           </h3>
-                          <div className="flex items-center gap-2 text-slate-600 justify-end">
+                          <div className="flex items-center gap-2 text-slate-600 justify-end transition-smooth group-hover:text-slate-800">
                             <span className="font-medium">الفنان: {art.profiles?.username || "غير معروف"}</span>
-                            <User className="w-4 h-4" />
+                            <User className="w-4 h-4 transition-bounce group-hover:scale-110" />
                           </div>
                         </header>
-                        <p className="text-slate-600 leading-relaxed mb-6 text-right">
+                        <p className="text-slate-600 leading-relaxed mb-6 text-right transition-smooth group-hover:text-slate-700">
                           {art.content}
                         </p>
-                        <div className="flex items-center gap-2 mb-6 p-3 bg-blue-50 rounded-xl justify-end">
-                          <span className="text-sm font-semibold text-orange-800">{voteCounts[art.id] || 0} صوت</span>
-                          <Heart className="w-4 h-4 text-orange-600" />
+                        <div className="flex items-center gap-2 mb-6 p-3 bg-blue-50 rounded-xl justify-end transition-smooth group-hover:bg-amber-50 hover-lift">
+                          <span className="text-sm font-semibold text-orange-800 transition-smooth group-hover:text-amber-800">{voteCounts[art.id] || 0} صوت</span>
+                          <Heart className="w-4 h-4 text-orange-600 transition-bounce group-hover:scale-110 group-hover:text-amber-600" />
                         </div>
                         {userId ? (
                           <div className="space-y-6">
-                            {/* <VoteButton artId={art.id} userId={userId} /> */}
                             <RatingStars artId={art.id} userId={userId} />
                             <div className="space-y-4">
                               <CommentsSection artId={art.id} />
@@ -255,10 +279,10 @@ export default function HomePage() {
                             </div>
                           </div>
                         ) : (
-                          <div className="text-center py-6 bg-slate-50 rounded-2xl">
-                            <Users className="w-8 h-8 text-slate-400 mx-auto mb-3" />
-                            <p className="text-slate-600 mb-4 font-medium">انضم إلى المحادثة</p>
-                            <button onClick={() => router.push("/login")} className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium shadow-lg">
+                          <div className="text-center py-6 bg-slate-50 rounded-2xl transition-smooth group-hover:bg-amber-50 hover-lift">
+                            <Users className="w-8 h-8 text-slate-400 mx-auto mb-3 transition-bounce group-hover:scale-110 group-hover:text-amber-500" />
+                            <p className="text-slate-600 mb-4 font-medium transition-smooth group-hover:text-slate-700">انضم إلى المحادثة</p>
+                            <button onClick={() => router.push("/login")} className="bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-bounce font-medium shadow-lg hover-glow">
                               تسجيل الدخول
                             </button>
                           </div>
@@ -268,7 +292,9 @@ export default function HomePage() {
                     </article>
                   )
                 })}
-              </div>
+</div>
+                      {/* Artworks list */}
+ 
          
             </section>
             </CountdownProvider>
