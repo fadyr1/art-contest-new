@@ -1,8 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Cairo } from "next/font/google"
-import "./globals.css"
-
+ 
 // load Cairo from Google Fonts
  
  
