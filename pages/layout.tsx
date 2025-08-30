@@ -4,7 +4,10 @@ import { Cairo } from "next/font/google"
  
 // load Cairo from Google Fonts
  
- 
+export const metadata: Metadata = {
+  title: "مهرجان الكرازة 2025",
+  description: "اثبت علي ما تعلمت",
+}
 
 export default function RootLayout({
   children,
